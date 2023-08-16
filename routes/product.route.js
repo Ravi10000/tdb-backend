@@ -9,12 +9,18 @@ const {
 const { isUser, isAdmin } = require("../middlewares/auth.middleware");
 const { body, query, param } = require("express-validator");
 const validateReq = require("../middlewares/validate-req");
+const {
+  imageUpload,
+  handleMulterError,
+} = require("../middlewares/image-upload.middleware");
 
 const router = express.Router();
 router.post(
   "/",
   isUser,
   isAdmin,
+  imageUpload.single("image"),
+  handleMulterError,
   [
     body("name").notEmpty().withMessage("product name required"),
     body("regularPrice")
@@ -33,13 +39,15 @@ router.post(
       .notEmpty()
       .withMessage("status required"),
   ],
-  validateReq,
+  validateReq.withImage,
   createProduct
 );
 router.put(
   "/",
   isUser,
   isAdmin,
+  imageUpload.single("image"),
+  handleMulterError,
   [
     body("productId")
       .isMongoId()
@@ -59,7 +67,7 @@ router.put(
       .isIn(["active", "inactive"])
       .withMessage("invalid status, must be active or inactive"),
   ],
-  validateReq,
+  validateReq.withImage,
   updateProduct
 );
 

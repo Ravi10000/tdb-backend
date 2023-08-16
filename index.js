@@ -35,6 +35,7 @@ mongoose.connection.once("open", () => {
 
 app.use("/api/auth", require("./routes/auth.route"));
 app.use("/api/products", require("./routes/product.route"));
+app.use("/api/users", require("./routes/user.route"));
 
 app.get(["/", "/api"], (_, res) => res.send("👋 welcome to the api"));
 app.use(errorHandler);

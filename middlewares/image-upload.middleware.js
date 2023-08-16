@@ -45,20 +45,32 @@ imageUpload._delete = (filename) => {
     console.log(err.message);
   }
 };
-imageUpload._handleError = (req, res, next) => {
+function deleteFile(filename) {
+  try {
+    fs.unlinkSync(`${imagesPath}/${filename}`);
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+function handleMulterError(req, res, next) {
   if (!req?.multerError) return next();
   if (req?.file?.filename) {
-    imageUpload._delete(req?.file?.filename);
+    deleteFile(req?.file?.filename);
   }
   if (req?.files?.length)
     req.files.forEach((file) => {
-      imageUpload._delete(file?.filename);
+      deleteFile(file?.filename);
     });
   return res.status(400).json({
     status: "error",
-    message: req.multerError,
+    message: "validation error",
+    errors: {
+      image: req.multerError,
+    },
   });
-};
+}
 
 module.exports.imageUpload = imageUpload;
 module.exports.imagesPath = imagesPath;
+module.exports.handleMulterError = handleMulterError;
+module.exports.deleteFile = deleteFile;

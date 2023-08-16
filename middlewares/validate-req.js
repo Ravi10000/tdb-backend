@@ -6,7 +6,6 @@ function validateReq(req, res, next) {
   if (result.isEmpty()) return next();
 
   const errors = {};
-  ``;
   result.errors.forEach((err) => {
     errors[err.path] = err.msg;
   });
@@ -19,10 +18,8 @@ function validateReq(req, res, next) {
 validateReq.withImage = (req, res, next) => {
   const result = validationResult(req);
   if (result.isEmpty()) return next();
-
   if (req?.file?.filename) imageUpload._delete(req?.file?.filename);
   const errors = {};
-  ``;
   result.errors.forEach((err) => {
     errors[err.path] = err.msg;
   });

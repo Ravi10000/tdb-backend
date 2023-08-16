@@ -109,11 +109,11 @@ module.exports.fetchProfile = async (req, res, next) => {
     const user = await User.findById(req.user._id).select(
       "-hash -__v -updatedAt -createdAt"
     );
-    if (!user) throw new Error("user not found", { cause: { status: 404 } });
+    if (!user) throw new Error("user not sent", { cause: { status: 404 } });
     const accessToken = generateToken(user);
     return res.status(200).json({
       status: "success",
-      message: "user found",
+      message: "user sent",
       accessToken,
       user,
     });
