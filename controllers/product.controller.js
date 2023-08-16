@@ -30,7 +30,7 @@ module.exports.updateProduct = async (req, res, next) => {
     const image = req?.file?.filename;
     const oldProduct = await Product.findById(productId);
     if (!oldProduct) {
-      throw new Error("product not sent", { cause: { status: 404 } });
+      throw new Error("product not found", { cause: { status: 404 } });
     }
     const product = await Product.findByIdAndUpdate(
       productId,
@@ -43,8 +43,6 @@ module.exports.updateProduct = async (req, res, next) => {
       },
       { new: true }
     );
-    if (!product)
-      throw new Error("product not sent", { cause: { status: 404 } });
     deleteFile(oldProduct?.image);
     res.status(200).json({
       status: "success",
@@ -70,13 +68,12 @@ module.exports.fetchProducts = async (req, res, next) => {
   }
 };
 
-// fetch product by id
 module.exports.fetchProductById = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const product = await Product.findById(productId);
     if (!product)
-      throw new Error("product not sent", { cause: { status: 404 } });
+      throw new Error("product not found", { cause: { status: 404 } });
     res.status(200).json({
       status: "success",
       message: "product sent",
@@ -91,9 +88,9 @@ module.exports.deleteProduct = async (req, res, next) => {
   try {
     const { productId } = req.params;
     const product = await Product.findByIdAndDelete(productId);
-    console.log({ product });
+    deleteFile(product?.image);
     if (!product)
-      throw new Error("product not sent", { cause: { status: 404 } });
+      throw new Error("product not found", { cause: { status: 404 } });
     res.status(200).json({
       status: "success",
       message: "product deleted",
