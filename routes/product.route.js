@@ -4,6 +4,7 @@ const {
   updateProduct,
   fetchProducts,
   fetchProductById,
+  deleteProduct,
 } = require("../controllers/product.controller");
 const { isUser, isAdmin } = require("../middlewares/auth.middleware");
 const { body, query, param } = require("express-validator");
@@ -78,4 +79,12 @@ router.get(
   fetchProducts
 );
 
+router.delete(
+  "/:productId",
+  isUser,
+  isAdmin,
+  param("productId").isMongoId().withMessage("invalid product id"),
+  validateReq,
+  deleteProduct
+);
 module.exports = router;
